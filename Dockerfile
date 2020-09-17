@@ -92,4 +92,6 @@ RUN mkdir /usr/include/mpark/ && \
     cp /thirdparts/Pangolin/include/mpark/variant.hpp /usr/include/mpark/  
     
     
+RUN mkdir /usr/local/include/nanoflann/ && \
+    mv /usr/local/include/nanoflann.hpp /usr/local/include/nanoflann/  
     
