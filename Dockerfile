@@ -87,3 +87,9 @@ RUN git clone --depth=1 https://github.com/CLIUtils/CLI11.git && \
     cmake .. && \
     make -j 10 && \
     make install
+
+RUN mkdir /usr/include/mpark/ && \ 
+    cp /thirdparts/Pangolin/include/mpark/variant.hpp /usr/include/mpark/  
+    
+    
+    
