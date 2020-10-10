@@ -30,15 +30,16 @@ ENV PATH="/opt/conda/bin:${PATH}"
 RUN conda install -y python=3.6 numpy jupyter pip
 RUN conda install -c conda-forge pybind11 opencv trimesh matplotlib  tensorboard scikit-image  jupyterlab  
 RUN conda install -c open3d-admin open3d   
-RUN conda install pytorch torchvision cudatoolkit=10.2 -c pytorch 
-
-
-RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-sparse==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-cluster==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-geometric
 
 WORKDIR /
+
+#RUN conda install pytorch torchvision cudatoolkit=10.2 -c pytorch 
+#RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+#RUN pip install torch-sparse==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+#RUN pip install torch-cluster==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+#RUN pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+#RUN pip install torch-geometric
+
+
 
 
