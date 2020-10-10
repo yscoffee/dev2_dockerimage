@@ -1,12 +1,9 @@
-
-FROM nvidia/cudagl:9.2-devel-ubuntu18.04
+FROM nvidia/cudagl:10.2-devel-ubuntu18.04
 
 RUN apt-get clean 
 RUN apt-get update
 
 RUN apt-get install -y --no-install-recommends apt-utils sudo 
-
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     build-essential \
@@ -19,23 +16,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     gcc \
     g++ \
-    gdb 
+    gdb \
+    x11-apps 
 
-RUN apt-get update && apt-get install -y  --no-install-recommends \
-    libboost-all-dev \
-    libsuitesparse-dev \ 
-    libgoogle-glog-dev \ 
-    libatlas-base-dev\ 
-    zlib1g-dev \
-    libjpeg-dev \
-    libpng-dev  
-
-# libigl
-RUN apt-get update && apt-get install -y libxi-dev libxmu-dev libxinerama-dev libxcursor-dev libxrandr-dev mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev libx11-dev 
-
-RUN apt-get install -y  --no-install-recommends \
-    mesa-utils x11-apps \
-    libassimp-dev assimp-utils 
 
 RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
     && curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh \
@@ -45,53 +28,17 @@ RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
 ENV PATH="/opt/conda/bin:${PATH}"
 
 RUN conda install -y python=3.6 numpy jupyter pip
-RUN conda install -c conda-forge xtl xtensor xtensor-io  
-RUN conda install -c conda-forge xtensor-python pybind11
-RUN conda install -c conda-forge opencv trimesh matplotlib  tensorboard scikit-image
-RUN conda install -c omnia eigen3==3.3.7  
-RUN conda install -c open3d-admin open3d  
-RUN conda install pytorch==1.0.1 torchvision==0.2.2 cudatoolkit=9.0 -c pytorch 
-
-WORKDIR /tmp
-
-RUN mkdir /thirdparts
-WORKDIR /thirdparts
-
-RUN apt-get install -y --no-install-recommends \
-    libglew-dev  \
-    libgl1-mesa-dev  
-
-RUN git clone --depth=1 https://github.com/stevenlovegrove/Pangolin.git && \
-    cd Pangolin && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DEIGEN_INCLUDE_DIR=/opt/conda/include/eigen3 && \
-    cmake --build . && \
-    make install
-
-RUN git clone --depth=1 https://github.com/jlblancoc/nanoflann.git && \ 
-    cd nanoflann && \
-    mkdir build && \
-    cd build && \
-    cmake .. && \
-    make -j 10 && \
-    make install
-    
+RUN conda install -c conda-forge pybind11 opencv trimesh matplotlib  tensorboard scikit-image  jupyterlab  
+RUN conda install -c open3d-admin open3d   
+RUN conda install pytorch torchvision cudatoolkit=10.2 -c pytorch 
 
 
-RUN git clone --depth=1 https://github.com/CLIUtils/CLI11.git && \
-    cd CLI11 && \
-    git submodule update --init && \
-    mkdir build && \
-    cd build && \
-    cmake .. && \
-    make -j 10 && \
-    make install
+RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+RUN pip install torch-sparse==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+RUN pip install torch-cluster==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+RUN pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+RUN pip install torch-geometric
 
-RUN mkdir /usr/include/mpark/ && \ 
-    cp /thirdparts/Pangolin/include/mpark/variant.hpp /usr/include/mpark/  
-    
-    
-RUN mkdir /usr/local/include/nanoflann/ && \
-    mv /usr/local/include/nanoflann.hpp /usr/local/include/nanoflann/  
-    
+WORKDIR /
+
+
