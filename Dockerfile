@@ -30,6 +30,7 @@ ENV PATH="/opt/conda/bin:${PATH}"
 RUN conda install -y python=3.6 numpy jupyter pip
 RUN conda install -c conda-forge pybind11 opencv trimesh matplotlib  tensorboard scikit-image  jupyterlab  
 RUN conda install -c open3d-admin open3d   
+RUN pip install tensorboardX
 
 WORKDIR /
 
