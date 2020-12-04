@@ -29,9 +29,10 @@ ENV PATH="/opt/conda/bin:${PATH}"
 WORKDIR /
 
 RUN conda create -n dev python=3.6
-RUN conda activate dev && conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch
-RUN conda activate dev && conda install -c conda-forge numpy opencv trimesh matplotlib  tensorboard scikit-image
-RUN conda activate dev && conda install -c open3d-admin open3d
-RUN conda activate dev && conda install cython==0.29.15  trimesh==3.6.18 pykdtree==1.3.1 pandas==1.0.3 
+RUN conda activate dev && conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch \
+  && conda install -c conda-forge numpy opencv trimesh matplotlib  tensorboard scikit-image \
+  && conda install -c open3d-admin open3d  \
+  && conda install cython==0.29.15  trimesh==3.6.18 pykdtree==1.3.1 pandas==1.0.3 
+  
 RUN conda activate dev && pip install pymcubes==0.1.0
 
