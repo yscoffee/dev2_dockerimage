@@ -26,13 +26,14 @@ RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
     && rm -rf /tmp/miniconda.sh 
 
 ENV PATH="/opt/conda/bin:${PATH}"
-WORKDIR /
+RUN conda create -q -n dev python=3.6
+SHELL ["conda", "run", "-n", "dev", "/bin/bash", "-c"]
 
-RUN conda create -n dev python=3.6
-RUN conda activate dev && conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch \
-  && conda install -c conda-forge numpy opencv trimesh matplotlib  tensorboard scikit-image \
-  && conda install -c open3d-admin open3d  \
-  && conda install cython==0.29.15  trimesh==3.6.18 pykdtree==1.3.1 pandas==1.0.3 
+WORKDIR / 
+RUN conda install -y pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch \
+  && conda install -y -c conda-forge numpy opencv trimesh matplotlib  tensorboard scikit-image \
+  && conda install -y -c open3d-admin open3d  \
+  && conda install -y cython==0.29.15  trimesh==3.6.18 pykdtree==1.3.1 pandas==1.0.3 
   
-RUN conda activate dev && pip install pymcubes==0.1.0
+RUN  pip install pymcubes==0.1.0 -y 
 
