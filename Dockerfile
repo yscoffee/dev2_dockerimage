@@ -17,11 +17,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++ \
     gdb \
-    x11-apps 
+    x11-apps \
+    meshlab \
+    xvfb
 
-
+# https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh
+#   curl -sSL https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh  -o /tmp/miniconda.sh \
+#   
 RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
-    && curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh \
+    && curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh -o /tmp/miniconda.sh \
     && bash /tmp/miniconda.sh -bfp /opt/conda \
     && rm -rf /tmp/miniconda.sh 
 
@@ -30,10 +34,12 @@ RUN conda create -q -n dev python=3.6
 SHELL ["conda", "run", "-n", "dev", "/bin/bash", "-c"]
 
 WORKDIR / 
-RUN conda install -y pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch \
-  && conda install -y -c conda-forge numpy opencv trimesh matplotlib  tensorboard scikit-image \
-  && conda install -y -c open3d-admin open3d  \
-  && conda install -y cython==0.29.15  trimesh==3.6.18 pykdtree==1.3.1 pandas==1.0.3 
-  
-RUN  pip install pymcubes==0.1.0 -y 
+RUN conda install  pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch 
+
+RUN  conda install  -c conda-forge numpy opencv  matplotlib  tensorboard  scikit-image \
+  && conda install  -c conda-forge cython  trimesh==3.6.18 pykdtree==1.3.1 \
+  && conda install -c anaconda pandas=1.0.3
+
+RUN conda install -y -c open3d-admin open3d  
+RUN  pip install pymcubes==0.1.0  
 
