@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM nvidia/cudagl:10.2-devel-ubuntu18.04
 # https://github.com/hiroaki-santo/mitsuba2-docker
 LABEL maintainer="hiroaki-santo"
 
@@ -12,12 +12,13 @@ RUN apt update && apt install -y git \
 
 ENV CC=clang-9
 ENV CXX=clang++-9
+ENV CUDACXX=/usr/local/cuda/bin/nvcc
 
 RUN git clone --recursive https://github.com/mitsuba-renderer/mitsuba2.git /mitsuba2
 
 WORKDIR /mitsuba2
 RUN git checkout f5398352515eb912a31cedae6952c4a712af6a00 && git submodule update
-ADD mitsuba.conf.cpu mitsuba.conf 
+ADD mitsuba.conf mitsuba.conf 
 RUN mkdir build && cd build && cmake -GNinja .. && ninja
 
 ENV PYTHONPATH=/mitsuba2/dist/python:/mitsuba2/build/dist/python:$PYTHONPATH
