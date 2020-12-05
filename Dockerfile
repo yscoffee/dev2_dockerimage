@@ -1,45 +1,24 @@
-FROM nvidia/cudagl:10.2-devel-ubuntu18.04
+FROM ubuntu:18.04
+# https://github.com/hiroaki-santo/mitsuba2-docker
+LABEL maintainer="hiroaki-santo"
 
-RUN apt-get clean 
-RUN apt-get update
+RUN apt update && apt install -y git \
+  clang-9 libc++-9-dev libc++abi-9-dev cmake ninja-build \
+  libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev \
+  python3-dev python3-distutils python3-setuptools \
+  python3-pytest python3-pytest-xdist python3-numpy \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y --no-install-recommends apt-utils sudo 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    pkg-config \
-    build-essential \
-    cmake \
-    git \
-    curl \
-    vim \
-    wget\
-    unzip\
-    ca-certificates \
-    gcc \
-    g++ \
-    gdb \
-    x11-apps \
-    meshlab \
-    xvfb
+ENV CC=clang-9
+ENV CXX=clang++-9
 
-# https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh
-#   curl -sSL https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh  -o /tmp/miniconda.sh \
-#   
-RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
-    && curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh -o /tmp/miniconda.sh \
-    && bash /tmp/miniconda.sh -bfp /opt/conda \
-    && rm -rf /tmp/miniconda.sh 
+RUN git clone --recursive https://github.com/mitsuba-renderer/mitsuba2.git /mitsuba2
 
-ENV PATH="/opt/conda/bin:${PATH}"
-RUN conda create -q -n dev python=3.6
-SHELL ["conda", "run", "-n", "dev", "/bin/bash", "-c"]
+WORKDIR /mitsuba2
+RUN git checkout f5398352515eb912a31cedae6952c4a712af6a00 && git submodule update
+ADD mitsuba.conf.cpu mitsuba.conf 
+RUN mkdir build && cd build && cmake -GNinja .. && ninja
 
-WORKDIR / 
-RUN conda install  pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch 
-
-RUN  conda install  -c conda-forge numpy opencv  matplotlib  tensorboard  scikit-image \
-  && conda install  -c conda-forge cython  trimesh==3.6.18 pykdtree==1.3.1 \
-  && conda install -c anaconda pandas=1.0.3
-
-RUN conda install -y -c open3d-admin open3d  
-RUN  pip install pymcubes==0.1.0  
-
+ENV PYTHONPATH=/mitsuba2/dist/python:/mitsuba2/build/dist/python:$PYTHONPATH
+ENV PATH=/mitsuba2/dist:/mitsuba2/build/dist:$PATH
