@@ -1,9 +1,8 @@
-FROM nvidia/cudagl:10.2-devel-ubuntu18.04
-# https://github.com/hiroaki-santo/mitsuba2-docker
-LABEL maintainer="hiroaki-santo"
+FROM nvidia/cudagl:10.2-devel-ubuntu18.04 
 
 RUN apt update && apt install -y git \
-  clang-9 libc++-9-dev libc++abi-9-dev cmake ninja-build \
+  wget vim tar  libopenexr-dev \
+  clang-9 libc++-9-dev libc++abi-9-dev cmake  \
   libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev \
   python3-dev python3-distutils python3-setuptools \
   python3-pytest python3-pytest-xdist python3-numpy \
@@ -14,12 +13,10 @@ ENV CC=clang-9
 ENV CXX=clang++-9
 ENV CUDACXX=/usr/local/cuda/bin/nvcc
 
-RUN git clone --recursive https://github.com/mitsuba-renderer/mitsuba2.git /mitsuba2
+RUN mkdir /dev 
+WORKDIR /dev
+RUN wget https://ftp.nluug.nl/pub/graphics/blender/release/Blender2.91/blender-2.91.0-linux64.tar.xz
+RUN tar -xf blender-2.91.0-linux64.tar.xz
+RUN git clone git@github.com:DIYer22/bpycv.git  
+RUN cd /dev/blender-2.91.0-linux64/2.91/python/bin
 
-WORKDIR /mitsuba2
-RUN git checkout f5398352515eb912a31cedae6952c4a712af6a00 && git submodule update
-ADD mitsuba.conf mitsuba.conf 
-RUN mkdir build && cd build && cmake -GNinja .. && ninja
-
-ENV PYTHONPATH=/mitsuba2/dist/python:/mitsuba2/build/dist/python:$PYTHONPATH
-ENV PATH=/mitsuba2/dist:/mitsuba2/build/dist:$PATH
