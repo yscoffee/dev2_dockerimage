@@ -25,7 +25,7 @@ RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
     && bash /tmp/miniconda.sh -bfp /opt/conda \
     && rm -rf /tmp/miniconda.sh 
 
-ENV PATH="/opt/conda/bin:${PATH}"
+ENV PATH="/usr/local/cuda/bin/:/opt/conda/bin:${PATH}"
 
 RUN conda install -y python=3.8 numpy jupyter pip
 RUN conda install -c conda-forge pybind11 opencv trimesh matplotlib  tensorboard scikit-image notebook  
