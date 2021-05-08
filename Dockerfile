@@ -27,17 +27,12 @@ RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
 
 ENV PATH="/opt/conda/bin:${PATH}"
 
-RUN conda install -y python=3.6 numpy jupyter pip
-RUN conda install -c conda-forge pybind11 opencv trimesh matplotlib  tensorboard scikit-image  jupyterlab  
+RUN conda install -y python=3.8 numpy jupyter pip
+RUN conda install -c conda-forge pybind11 opencv trimesh matplotlib  tensorboard scikit-image notebook  
 RUN conda install -c open3d-admin open3d   
-RUN conda install pytorch torchvision cudatoolkit=10.2 -c pytorch 
+RUN conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 -c pytorch
+RUN pip install torch-points3d
 
-
-RUN pip install torch-scatter==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-sparse==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-cluster==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-spline-conv==latest+cu102 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-RUN pip install torch-geometric
 
 WORKDIR /
 
